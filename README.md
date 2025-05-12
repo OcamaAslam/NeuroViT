@@ -71,10 +71,10 @@ The TEKNO21 Brain Stroke Dataset contains:
 - Multimodal integration (clinical data)
 - Domain-specific pretraining
 
-## Project Poster
-View the interactive project poster:  
-[![NeuroViT Poster](assets/logo.png)](docs/neurovit_poster.html)
-
 ## License
 
 This project is for research purposes only. Dataset use must comply with original data provider terms.
+
+## Team
+
+•    Engr. Muhammad Osama     •	Muhammad Moeez    •	Muneeb Ur Rahman
