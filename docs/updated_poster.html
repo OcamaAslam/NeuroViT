@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeuroViT: A Deep Learning Approach for Binary Classification of Hemorrhagic/Ischemic Strokes</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f6ff;
+            color: #333;
+        }
+        .poster-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px;
+            background-color: white;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        .header {
+            background: linear-gradient(135deg, #2c3e50, #4b6cb7);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: #fbfbfb;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        .section-title {
+            border-bottom: 3px solid #4b6cb7;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+        .architecture-diagram {
+            width: 100%;
+            overflow-x: auto;
+            background-color: #f8fafc;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .model-component {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px;
+            color: white;
+            text-align: center;
+            font-weight: bold;
+            display: inline-block;
+        }
+        .arrow {
+            display: inline-block;
+            padding: 10px;
+            font-size: 24px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f8ff;
+        }
+        .comparison-table th, .comparison-table td {
+            text-align: center;
+            padding: 8px 12px;
+        }
+        .comparison-table th {
+            background-color: #2c3e50;
+            color: white;
+        }
+        .comparison-table .model-header {
+            background-color: #4b6cb7;
+            color: white;
+            font-weight: bold;
+        }
+        .comparison-table .metric-header {
+            background-color: #7b96d6;
+            color: white;
+        }
+        .comparison-table .highlight {
+            background-color: #e6fffa;
+            font-weight: bold;
+        }
+        .mermaid {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="poster-container">
+        <!-- Header with logo on the left -->
+        <div class="header flex items-center space-x-6">
+            <img src="../assets/logo.png" alt="NeuroViT Logo" class="h-24 w-auto rounded">
+
+            <div>
+                <h1 class="text-3xl md:text-4xl font-bold mb-2">
+                    NeuroViT: A Deep Learning Approach for Binary Classification of Hemorrhagic/Ischemic Strokes
+                </h1>
+                <p class="text-lg md:text-xl">
+                    Exploring Vision Transformer vs ResNet Potential for Stroke Detection from Brain CT Scans
+                </p>
+            </div>
+        </div>
+
+        <!-- Dataset Description -->
+        <div class="section">
+            <h2 class="section-title text-2xl font-bold">Dataset Description</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <p class="mb-4">The <strong>TEKNO21 Brain Stroke Dataset</strong> consists of 7,369 anonymized brain CT scans in DICOM and PNG formats, labeled by seven expert radiologists. It includes:</p>
+                    <ul class="list-disc pl-6 mb-4">
+                        <li>Acute/hyperacute ischemic stroke cases</li>
+                        <li>Hemorrhagic stroke cases</li>
+                        <li>Non-stroke images (control group)</li>
+                    </ul>
+                    <p>Each annotation was verified for accuracy. The dataset was curated from the Turkish Ministry of Health's e-Pulse and Teleradiology System (2019–2020) as part of the TEKNOFEST-2021 Artificial Intelligence in Healthcare Competition.</p>
+                </div>
+                <div class="bg-blue-50 p-4 rounded-lg">
+                    <h3 class="font-bold text-lg mb-2">Key Dataset Features:</h3>
+                    <ul class="list-disc pl-6">
+                        <li>7,369 brain CT scans</li>
+                        <li>DICOM and PNG formats</li>
+                        <li>Expert-verified annotations</li>
+                        <li>Binary classification task: "inme var" (stroke present) vs "inme yok" (no stroke)</li>
+                        <li>Source: Turkish Ministry of Health (2019-2020)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Project Objectives -->
+        <div class="section">
+            <h2 class="section-title text-2xl font-bold">Primary Objectives</h2>
+            <div class="flex justify-center">
+                <div class="bg-blue-100 p-6 rounded-lg max-w-2xl">
+                    <p class="text-xl text-center font-semibold">Develop a binary classifier to detect stroke presence</p>
+                    <p class="text-center text-lg mt-2">("inme var" vs "inme yok")</p>
+                    <p class="text-center mt-3">Comparing traditional CNN (ResNet) vs. Vision Transformer approaches</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Methodology & Architecture -->
+        <div class="section">
+            <h2 class="section-title text-2xl font-bold">Model Architecture & Methodology</h2>
+            
+            <div class="architecture-diagram">
+                <h3 class="text-xl font-bold mb-4 text-center">Data Pipeline Architecture</h3>
+                <div class="mermaid">
+                    graph TD
+                        A[BTX24/tekno21-brain-stroke-dataset] --> B[Train/Val/Test Split]
+                        B --> C1[ResNet Transform]
+                        B --> C2[ViT Transform]
+                        C1 --> D1[ResNet18 Model]
+                        C2 --> D2[ViT Model]
+                </div>
+            </div>
+
+            <div class="architecture-diagram">
+                <h3 class="text-xl font-bold mb-4 text-center">Model Architectures Comparison</h3>
+                <div class="mermaid">
+                    graph LR
+                        ResNet18[ResNet18 Architecture] -->|Modified| FC[New FC Layer: 512→2]
+                        ViT[ViT-base-patch16] -->|Modified| Classifier[New Head: 768→2]
+                </div>
+            </div>
+
+            <!-- <div class="architecture-diagram">
+                <h3 class="text-xl font-bold mb-4 text-center">Detailed Model Architecture</h3>
+                <pre style="background-color: #f8fafc; padding: 20px; border-radius: 8px; white-space: pre-wrap;">
++-----------------------+
+|   Input Image (3xHxW) |
++-----------------------+
+           |
+           v
++-----------------------+
+|   Preprocessing       |
+|   - Resize/Crop       |
+|   - Normalization     |
++-----------------------+
+           |
+           v
++---------------------------------------------------+
+|                   Model Architecture              |
+|                                                   |
+|  +----------------+        +-------------------+  |
+|  |   ResNet18     |        |  Vision Transformer | |
+|  |                |        |                   |  |
+|  | - Conv Layers  |        | - Patch Embedding |  |
+|  | - Bottleneck   |        | - Transformer     |  |
+|  |   Blocks       |        |   Encoder (12L)   |  |
+|  | - Avg Pool     |        | - LayerNorm       |  |
+|  +-------+--------+        +--------+----------+  |
+|          |                          |             |
+|          v                          v             |
+|  +----------------+        +-------------------+ |
+|  |  FC Layer (512→2)|        | Classifier (768→2)| |
+|  +----------------+        +-------------------+ |
+|                                                   |
++---------------------------------------------------+
+           |
+           v
++-----------------------+
+|   Output (2 classes)  |
+|   - inme yok         |
+|   - inme var         |
++-----------------------+
+                </pre>
+            </div> -->
+
+            <div class="architecture-diagram">
+                <h3 class="text-xl font-bold mb-4 text-center">Training Evaluation Flow</h3>
+                <div class="mermaid">
+                    sequenceDiagram
+                        participant TestLoader
+                        participant Model
+                        participant Metrics
+                        
+                        TestLoader->>Model: Batch of images
+                        Model->>Metrics: Predictions
+                        Metrics->>Metrics: Calculate:
+                        Note right of Metrics: - Loss<br>- Accuracy<br>- Confusion Matrix<br>- Classification Report
+                        Metrics-->>Model: Evaluation Complete
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                <div>
+                    <h3 class="text-xl font-bold mb-3">Model Architecture</h3>
+                    <ul class="list-disc pl-6">
+                        <li>ResNet 18 (baseline model)</li>
+                        <li>ViT-Base (pretrained on ImageNet-21k)</li>
+                        <li>Custom classification heads for both models</li>
+                        <li>Differential learning rates for backbone vs head</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold mb-3">Training Protocol</h3>
+                    <ul class="list-disc pl-6">
+                        <li>Loss: CrossEntropyLoss</li>
+                        <li>Optimizer: AdamW with layer-wise learning rates</li>
+                        <li>ResNet: Uniform LR (1e-4)</li>
+                        <li>ViT: Backbone (5e-5), Head (1e-4)</li>
+                        <li>Batch size: 16 for both models</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Rest of your HTML content remains the same -->
+        <!-- Model Comparison Section -->
+        <div class="section">
+            <h2 class="section-title text-2xl font-bold">Detailed Model Comparison</h2>
+            
+            <p class="mb-4">A comprehensive comparison between ResNet 18 and ViT Base Patch16 models on the test dataset:</p>
+            
+            <div class="grid grid-cols-1 gap-8">
+                <!-- ResNet 18 Results -->
+                <div>
+                    <h3 class="text-xl font-bold mb-3 text-blue-800">ResNet 18 Performance</h3>
+                    <!-- <div class="overflow-x-auto bg-gray-900 p-4 rounded-lg">
+                        <table class="w-full text-white border-collapse" style="font-family: monospace;">
+                            <thead>
+                                <tr>
+                                    <th class="py-2 px-4 text-left" colspan="5">Classification Report:</th>
+                                </tr>
+                                <tr>
+                                    <th></th>
+                                    <th class="py-2 px-4 text-right">precision</th>
+                                    <th class="py-2 px-4 text-right">recall</th>
+                                    <th class="py-2 px-4 text-right">f1-score</th>
+                                    <th class="py-2 px-4 text-right">support</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="py-1 px-4">inme yok</td>
+                                    <td class="py-1 px-4 text-right">0.9872</td>
+                                    <td class="py-1 px-4 text-right">0.9292</td>
+                                    <td class="py-1 px-4 text-right">0.9573</td>
+                                    <td class="py-1 px-4 text-right">579</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-1 px-4">inme var</td>
+                                    <td class="py-1 px-4 text-right">0.9559</td>
+                                    <td class="py-1 px-4 text-right">0.9922</td>
+                                    <td class="py-1 px-4 text-right">0.9737</td>
+                                    <td class="py-1 px-4 text-right">895</td>
+                                </tr>
+                                <tr><td colspan="5" class="py-1"></td></tr>
+                                <tr>
+                                    <td class="py-1 px-4">accuracy</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td class="py-1 px-4 text-right">0.9674</td>
+                                    <td class="py-1 px-4 text-right">1474</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-1 px-4">macro avg</td>
+                                    <td class="py-1 px-4 text-right">0.9715</td>
+                                    <td class="py-1 px-4 text-right">0.9607</td>
+                                    <td class="py-1 px-4 text-right">0.9655</td>
+                                    <td class="py-1 px-4 text-right">1474</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-1 px-4">weighted avg</td>
+                                    <td class="py-1 px-4 text-right">0.9682</td>
+                                    <td class="py-1 px-4 text-right">0.9674</td>
+                                    <td class="py-1 px-4 text-right">0.9672</td>
+                                    <td class="py-1 px-4 text-right">1474</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div> -->
+                    <div class="overflow-x-auto bg-white p-4 rounded-lg">
+    <table class="w-full text-black border-collapse" style="font-family: monospace;">
+        <thead>
+            <tr>
+                <th class="py-2 px-4 text-left" colspan="5">Classification Report:</th>
+            </tr>
+            <tr>
+                <th></th>
+                <th class="py-2 px-4 text-right">precision</th>
+                <th class="py-2 px-4 text-right">recall</th>
+                <th class="py-2 px-4 text-right">f1-score</th>
+                <th class="py-2 px-4 text-right">support</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="py-1 px-4">inme yok</td>
+                <td class="py-1 px-4 text-right">0.9872</td>
+                <td class="py-1 px-4 text-right">0.9292</td>
+                <td class="py-1 px-4 text-right">0.9573</td>
+                <td class="py-1 px-4 text-right">579</td>
+            </tr>
+            <tr>
+                <td class="py-1 px-4">inme var</td>
+                <td class="py-1 px-4 text-right">0.9559</td>
+                <td class="py-1 px-4 text-right">0.9922</td>
+                <td class="py-1 px-4 text-right">0.9737</td>
+                <td class="py-1 px-4 text-right">895</td>
+            </tr>
+            <tr><td colspan="5" class="py-1"></td></tr>
+            <tr>
+                <td class="py-1 px-4">accuracy</td>
+                <td></td>
+                <td></td>
+                <td class="py-1 px-4 text-right">0.9674</td>
+                <td class="py-1 px-4 text-right">1474</td>
+            </tr>
+            <tr>
+                <td class="py-1 px-4">macro avg</td>
+                <td class="py-1 px-4 text-right">0.9715</td>
+                <td class="py-1 px-4 text-right">0.9607</td>
+                <td class="py-1 px-4 text-right">0.9655</td>
+                <td class="py-1 px-4 text-right">1474</td>
+            </tr>
+            <tr>
+                <td class="py-1 px-4">weighted avg</td>
+                <td class="py-1 px-4 text-right">0.9682</td>
+                <td class="py-1 px-4 text-right">0.9674</td>
+                <td class="py-1 px-4 text-right">0.9672</td>
+                <td class="py-1 px-4 text-right">1474</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+                </div>
+                
+                <!-- ViT Base Patch16 Results -->
+                <div>
+                    <h3 class="text-xl font-bold mb-3 text-purple-800">ViT Base Patch16 Performance</h3>
+                    <div class="overflow-x-auto bg-white p-4 rounded-lg">
+                        <table class="w-full text-black border-collapse" style="font-family: monospace;">
+                            <thead>
+                                <tr>
+                                    <th class="py-2 px-4 text-left" colspan="5">Classification Report:</th>
+                                </tr>
+                                <tr>
+                                    <th></th>
+                                    <th class="py-2 px-4 text-right">precision</th>
+                                    <th class="py-2 px-4 text-right">recall</th>
+                                    <th class="py-2 px-4 text-right">f1-score</th>
+                                    <th class="py-2 px-4 text-right">support</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="py-1 px-4">inme yok</td>
+                                    <td class="py-1 px-4 text-right">0.9669</td>
+                                    <td class="py-1 px-4 text-right">0.9085</td>
+                                    <td class="py-1 px-4 text-right">0.9368</td>
+                                    <td class="py-1 px-4 text-right">579</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-1 px-4">inme var</td>
+                                    <td class="py-1 px-4 text-right">0.9430</td>
+                                    <td class="py-1 px-4 text-right">0.9799</td>
+                                    <td class="py-1 px-4 text-right">0.9611</td>
+                                    <td class="py-1 px-4 text-right">895</td>
+                                </tr>
+                                <tr><td colspan="5" class="py-1"></td></tr>
+                                <tr>
+                                    <td class="py-1 px-4">accuracy</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td class="py-1 px-4 text-right">0.9518</td>
+                                    <td class="py-1 px-4 text-right">1474</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-1 px-4">macro avg</td>
+                                    <td class="py-1 px-4 text-right">0.9550</td>
+                                    <td class="py-1 px-4 text-right">0.9442</td>
+                                    <td class="py-1 px-4 text-right">0.9489</td>
+                                    <td class="py-1 px-4 text-right">1474</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-1 px-4">weighted avg</td>
+                                    <td class="py-1 px-4 text-right">0.9524</td>
+                                    <td class="py-1 px-4 text-right">0.9518</td>
+                                    <td class="py-1 px-4 text-right">0.9515</td>
+                                    <td class="py-1 px-4 text-right">1474</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-8">
+                <h3 class="text-xl font-bold mb-3">Comparative Analysis</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Metric</th>
+                                <th>ResNet 18</th>
+                                <th>ViT Base Patch16</th>
+                                <th>Difference</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="font-bold">Overall Accuracy</td>
+                                <td class="highlight">96.74%</td>
+                                <td>95.18%</td>
+                                <td>+1.56% (ResNet)</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold">Precision (No Stroke)</td>
+                                <td class="highlight">98.72%</td>
+                                <td>96.69%</td>
+                                <td>+2.03% (ResNet)</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold">Recall (No Stroke)</td>
+                                <td class="highlight">92.92%</td>
+                                <td>90.85%</td>
+                                <td>+2.07% (ResNet)</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold">F1-Score (No Stroke)</td>
+                                <td class="highlight">95.73%</td>
+                                <td>93.68%</td>
+                                <td>+2.05% (ResNet)</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold">Precision (Stroke)</td>
+                                <td class="highlight">95.59%</td>
+                                <td>94.30%</td>
+                                <td>+1.29% (ResNet)</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold">Recall (Stroke)</td>
+                                <td class="highlight">99.22%</td>
+                                <td>97.99%</td>
+                                <td>+1.23% (ResNet)</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold">F1-Score (Stroke)</td>
+                                <td class="highlight">97.37%</td>
+                                <td>96.11%</td>
+                                <td>+1.26% (ResNet)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                    <div class="bg-blue-50 p-4 rounded-lg">
+                        <h3 class="font-bold text-lg mb-2">Key Observations:</h3>
+                        <ul class="list-disc pl-6">
+                            <li>ResNet 18 outperformed ViT Base in all metrics for this specific task</li>
+                            <li>ResNet showed stronger precision for "no stroke" classification (+2.03%)</li>
+                            <li>Both models achieved excellent recall for stroke cases (>97%)</li>
+                            <li>Overall accuracy difference is 1.56% in favor of ResNet 18</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="bg-yellow-50 p-4 rounded-lg">
+                        <h3 class="font-bold text-lg mb-2">Implications:</h3>
+                        <ul class="list-disc pl-6">
+                            <li>ResNet architecture is currently better suited for this specific stroke classification task</li>
+                            <li>The ConvNet inductive bias appears beneficial for 2D medical imaging in this context</li>
+                            <li>ViT models may require more extensive pretraining on domain-specific data</li>
+                            <li>Both models achieve clinically viable performance (>95% accuracy)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results - Updated to reflect ResNet superiority -->
+        <div class="section">
+            <h2 class="section-title text-2xl font-bold">Results Summary</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-blue-50 p-4 rounded-lg">
+                    <h3 class="font-bold text-lg mb-2">ResNet 18 (Superior Performance):</h3>
+                    <ul class="list-disc pl-6">
+                        <li><strong>Accuracy:</strong> 96.74%</li>
+                        <li><strong>Macro F1-Score:</strong> 0.9655</li>
+                        <li><strong>Precision:</strong> 97.15% (macro avg)</li>
+                        <li><strong>Advantages:</strong> Better performance on 2D slice classification, stronger precision on "no stroke" cases, excellent recall for stroke detection</li>
+                    </ul>
+                </div>
+                
+                <div class="bg-purple-50 p-4 rounded-lg">
+                    <h3 class="font-bold text-lg mb-2">NeuroViT (Promising Approach):</h3>
+                    <ul class="list-disc pl-6">
+                        <li><strong>Accuracy:</strong> 95.18%</li>
+                        <li><strong>Macro F1-Score:</strong> 0.9489</li>
+                        <li><strong>Precision:</strong> 95.50% (macro avg)</li>
+                        <li><strong>Advantages:</strong> Potential for multimodal integration, better suited for 3D context (with adaptation), uncertainty quantification capabilities</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="bg-green-50 p-4 rounded-lg">
+                <h3 class="font-bold text-lg mb-2">Key Performance Insights:</h3>
+                <ul class="list-disc pl-6">
+                    <li>ResNet consistently outperforms ViT across all metrics in the current 2D slice classification paradigm</li>
+                    <li>Both models demonstrate clinically acceptable performance (>95% accuracy)</li>
+                    <li>ViT shows promise for handling complex data relationships but requires architectural adaptations</li>
+                    <li>The inductive biases of convolutional networks appear beneficial for the current task constraints</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Conclusions & Future Work -->
+        <div class="section">
+            <h2 class="section-title text-2xl font-bold">Conclusions & Future Work</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <h3 class="text-xl font-bold mb-3">Contributions</h3>
+                    <ul class="list-disc pl-6 mb-4">
+                        <li>First application of Vision Transformers to TEKNO21 dataset</li>
+                        <li>Comprehensive comparison between ResNet and ViT approaches</li>
+                        <li>Demonstrated current superiority of ResNet for 2D slice classification</li>
+                        <li>Identified potential pathways for ViT improvement</li>
+                    </ul>
+                    
+                    <h3 class="text-xl font-bold mb-3">Limitations of Current ViT Approach</h3>
+                    <ul class="list-disc pl-6">
+                        <li>Limited to axial CT slices (no 3D context utilization)</li>
+                        <li>ViT requires more domain-specific pretraining</li>
+                        <li>Current architecture not optimized for medical imaging specifics</li>
+                        <li>Underperforms ResNet in 2D slice analysis</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-xl font-bold mb-3">Future Directions for ViT Improvement</h3>
+                    <ul class="list-disc pl-6 mb-4">
+                        <li><strong>3D Extension:</strong>
+                            <ul class="list-circle pl-6">
+                                <li>Adapt ViT for volumetric analysis of entire CT scans</li>
+                                <li>Leverage spatial relationships between slices</li>
+                                <li>Could surpass ResNet when given full 3D context</li>
+                            </ul>
+                        </li>
+                        <li><strong>Multimodal Integration:</strong>
+                            <ul class="list-circle pl-6">
+                                <li>Incorporate clinical metadata (NIHSS scores)</li>
+                                <li>Combine imaging with patient history data</li>
+                                <li>ViT architecture better suited for heterogeneous data fusion</li>
+                            </ul>
+                        </li>
+                        <li><strong>Domain-Specific Pretraining:</strong>
+                            <ul class="list-circle pl-6">
+                                <li>Pretrain on larger medical imaging datasets</li>
+                                <li>Develop stroke-specific self-supervised objectives</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    
+                    <div class="bg-red-50 p-4 rounded-lg">
+                        <h3 class="font-bold text-lg mb-2">Ethical Considerations:</h3>
+                        <p>All models should be used as second readers only, supporting radiologists rather than replacing expert judgment.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="mt-8 text-center text-gray-600 text-sm">
+            <p>•    Engr. Muhammad Osama     •	Muhammad Moeez    •	Muneeb Ur Rahman</p>
+            <p class="mt-2">© 2025 NeuroViT Team</p>
+        </div>
+    </div>
+
+    <!-- Mermaid JS for diagrams -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis'
+            }
+        });
+    </script>
+</body>
+</html>

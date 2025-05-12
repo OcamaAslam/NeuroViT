@@ -1,5 +1,5 @@
 # NeuroViT: Brain Stroke Classification using Vision Transformers
-
+![NeuroViT Logo](./assets/logo.png)
 A deep learning project comparing ResNet18 and Vision Transformer (ViT) models for binary classification of brain stroke CT scans.
 
 ## Project Description
