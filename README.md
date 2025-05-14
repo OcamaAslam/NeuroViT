@@ -75,6 +75,17 @@ The TEKNO21 Brain Stroke Dataset contains:
 
 This project is for research purposes only. Dataset use must comply with original data provider terms.
 
-## Team
+# ✨ **Developed By** ✨
 
-•    Engr. Muhammad Osama     •	Muhammad Moeez    •	Muneeb Ur Rahman
+---
+
+### 🚀 **Team Members** 🚀  
+| **Name**                | **Title**               |  
+|-------------------------|-------------------------|  
+| `Engr. Muhammad Osama`  | *Lead Developer*        |  
+| `Muneeb Ur Rehman`      | *Creative Architect*    |  
+| `Muhammad Moeez`        | *Systems Support*      |  
+
+---
+
+🔧 **Powered by Innovation** | 🌟 **Crafted with Excellence**  
