@@ -145,7 +145,7 @@ def display_results(prediction):
         st.image(
             prediction['image'], 
             caption=f"Uploaded Image: {prediction['image_name']}",
-            use_column_width=True
+            width=400
         )
     
     with col2:
