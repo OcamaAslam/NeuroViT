@@ -21,15 +21,15 @@ st.set_page_config(
     page_icon="🧠",
     layout="wide",
     initial_sidebar_state="expanded",
-    menu_items={
-        'Get Help': 'https://github.com/yourusername/neurovit/issues',
-        'Report a bug': "https://github.com/yourusername/neurovit/issues",
-        'About': """
-        ## NeuroViT v2.0
-        Advanced brain stroke detection using deep learning.
-        Developed for research purposes.
-        """
-    }
+    # menu_items={
+    #     'Get Help': 'https://github.com/yourusername/neurovit/issues',
+    #     'Report a bug': "https://github.com/yourusername/neurovit/issues",
+    #     'About': """
+    #     ## NeuroViT v2.0
+    #     Advanced brain stroke detection using deep learning.
+    #     Developed for research purposes.
+    #     """
+    # }
 )
 
 # Device configuration
@@ -212,7 +212,7 @@ def sidebar_content():
     st.sidebar.info("""
     This application uses a fine-tuned ResNet18 model trained on the 
     BTX24 brain-stroke-dataset to detect potential stroke indicators 
-    in medical images.
+    in medical images. [Read more here](docs/neurovit_poster.html)
     """)
     
     st.sidebar.markdown("### How to Use")
