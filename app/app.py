@@ -145,7 +145,7 @@ def display_results(prediction):
         st.image(
             prediction['image'], 
             caption=f"Uploaded Image: {prediction['image_name']}",
-            use_column_width=True
+            use_container_width=True
         )
     
     with col2:
@@ -203,7 +203,7 @@ def sidebar_content():
     st.sidebar.info("""
     This application uses a fine-tuned ResNet18 model trained on the 
     BTX24 brain-stroke-dataset to detect potential stroke indicators 
-    in medical images. [Read more here](docs/neurovit_poster.html)
+    in medical images.
     """)
     
     st.sidebar.markdown("### How to Use")
