@@ -239,7 +239,8 @@ def disclaimer_footer():
     **Disclaimer:** This AI tool is for research and assistive purposes only.  
     Not intended for direct clinical diagnosis without human oversight.  
     NeuroViT v2.0 | [GitHub Repository](https://github.com/OcamaAslam/NeuroViT)  
-    © 2025 NeuroViT Project | All rights reserved | Engr. Muhammad Osama
+    © 2025 NeuroViT Project | All rights reserved | Engr. Muhammad Osama  
+    [Get connected with me on LinkedIn](https://linkedin.com/in/ocama-mohamed)
     """)
 
 # Main App Flow
