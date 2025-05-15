@@ -14,6 +14,7 @@ from datetime import datetime
 # Constants
 MODEL_PATH = os.path.join(os.path.dirname(__file__), '../model/ResNet18.pth')
 ASSETS_PATH = os.path.join(os.path.dirname(__file__), '../assets/logo.png')
+POSTER_PATH = os.path.join(os.path.dirname(__file__), '../docs/neurovit_poster.html')
 
 # Streamlit Configuration
 st.set_page_config(
@@ -49,10 +50,23 @@ def load_model():
         st.error(f"Error loading model: {str(e)}")
         st.stop()
 
+def load_poster():
+    """Load and cache the poster HTML content"""
+    try:
+        if not os.path.exists(POSTER_PATH):
+            st.error(f"Poster file not found at: {POSTER_PATH}")
+            return None
+        with open(POSTER_PATH, 'r', encoding='utf-8') as f:
+            return f.read()
+    except Exception as e:
+        st.error(f"Error loading poster: {str(e)}")
+        return None
+
 # Initialize session state
 if 'app_state' not in st.session_state:
     st.session_state.app_state = {
         'model': load_model(),
+        'poster_content': load_poster(),
         'transform': T.Compose([
             T.Resize(256),
             T.CenterCrop(224),
@@ -82,6 +96,18 @@ def display_prediction_history():
             with st.sidebar.expander(f"{pred['timestamp']}: {pred['prediction']}"):
                 st.write(f"**Confidence:** {pred['confidence']*100:.1f}%")
                 st.write(f"**Image:** {pred['image_name']}")
+
+def show_poster():
+    """Display the poster content in an expandable section"""
+    if st.session_state.app_state['poster_content']:
+        with st.expander("📄 View NeuroViT Research Poster", expanded=False):
+            st.components.v1.html(
+                st.session_state.app_state['poster_content'],
+                height=1000,
+                scrolling=True
+            )
+    else:
+        st.warning("Poster content not available")
 
 # UI Components
 def main_header():
@@ -145,7 +171,7 @@ def display_results(prediction):
         st.image(
             prediction['image'], 
             caption=f"Uploaded Image: {prediction['image_name']}",
-            use_column_width=True
+            use_container_width=True
         )
     
     with col2:
@@ -203,8 +229,12 @@ def sidebar_content():
     st.sidebar.info("""
     This application uses a fine-tuned ResNet18 model trained on the 
     BTX24 brain-stroke-dataset to detect potential stroke indicators 
-    in medical images. [Read more here](docs/neurovit_poster.html)
+    in medical images.
     """)
+    
+    # Add button to show poster
+    if st.sidebar.button("📄 View Research Poster"):
+        show_poster()
     
     st.sidebar.markdown("### How to Use")
     st.sidebar.write("""
