@@ -21,15 +21,6 @@ st.set_page_config(
     page_icon="🧠",
     layout="wide",
     initial_sidebar_state="expanded",
-    # menu_items={
-    #     'Get Help': 'https://github.com/yourusername/neurovit/issues',
-    #     'Report a bug': "https://github.com/yourusername/neurovit/issues",
-    #     'About': """
-    #     ## NeuroViT v2.0
-    #     Advanced brain stroke detection using deep learning.
-    #     Developed for research purposes.
-    #     """
-    # }
 )
 
 # Device configuration
